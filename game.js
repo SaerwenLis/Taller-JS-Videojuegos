@@ -18,16 +18,31 @@ function setCanvasSize() {
     canvas.setAttribute('width', canvasSize)
     canvas.setAttribute('height', canvasSize)
 
-    elementsSize = canvasSize / 10
-
+    elementsSize = canvasSize / 10.4
+    
     startGame()
 }
 
 function startGame() {
-    game.font = elementsSize + 'px Verdana'
-    game.textAlign = 'end'
+    game.font = `${elementsSize}px Arial`
+    game.textAlign = 'center'
 
-    for (let i = 0; i < 10; i++) {
-        game.fillText(emojis['X'], elementsSize, elementsSize * i)
-    }
+    const map = maps[0]
+    const mapRows = map.trim().split('\n')
+    const mapRowCols = mapRows.map(row => row.trim().split(''))
+
+    mapRowCols.forEach((row, rowIndex) => {
+        row.forEach((col, colIndex) => {
+            const emoji = emojis[col]
+            const posX = elementsSize * (colIndex + 1)
+            const posY = elementsSize * (rowIndex + 1)
+            game.fillText(emoji, posX, posY)
+        })
+    });
+
+/*     for (let row = 1; row <= 10; row++) {
+       for (let col = 1; col <= 10; col++) {
+        game.fillText(emojis[mapRowCols[row - 1][col - 1]], elementsSize * col, elementsSize * row)
+       }
+    } */
 }
