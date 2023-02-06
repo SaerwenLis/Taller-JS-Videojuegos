@@ -12,6 +12,15 @@ const playerPosition = {
 
 let canvasSize
 let elementsSize
+let level = 0
+let lives = 3
+
+const giftPosition = {
+    x: undefined,
+    y: undefined,
+}
+
+let enemyPositions = []
 
 window.addEventListener('load', setCanvasSize)
 window.addEventListener('resize', setCanvasSize)
@@ -46,11 +55,17 @@ function startGame() {
     game.font = `${elementsSize}px Arial`
     game.textAlign = 'end'
 
-    const map = maps[0]
+    const map = maps[level]
+    if (!map) {
+        gameWin()
+        return
+    }
     const mapRows = map.trim().split('\n')
     const mapRowCols = mapRows.map(row => row.trim().split(''))
 
+    enemyPositions = [] 
     game.clearRect(0,0, canvasSize, canvasSize)
+
     mapRowCols.forEach((row, rowIndex) => {
         row.forEach((col, colIndex) => {
             const emoji = emojis[col]
@@ -62,6 +77,14 @@ function startGame() {
                     playerPosition.x = fixNumber(posX);
                     playerPosition.y = fixNumber(posY);
                 }
+            } else if (col == 'I') {
+                giftPosition.x = fixNumber(posX);
+                giftPosition.y = fixNumber(posY);
+            } else if (col == 'X') {
+                enemyPositions.push({
+                    x: fixNumber(posX),
+                    y: fixNumber(posY),
+                })
             }
             game.fillText(emoji, posX, posY)
         })
@@ -70,6 +93,23 @@ function startGame() {
 }
 
 function movePlayer() {
+    const giftCollisionX = playerPosition.x == giftPosition.x
+    const giftCollisionY = playerPosition.y == giftPosition.y
+    const giftCollision = giftCollisionX && giftCollisionY
+
+    if (giftCollision) {
+        levelUp()
+    }
+
+    const enemyCollision = enemyPositions.find(enemy => {
+        const enemyCollisionX = enemy.x == playerPosition.x
+        const enemyCollisionY = enemy.y == playerPosition.y
+        return enemyCollisionX && enemyCollisionY
+    })
+    if (enemyCollision) {
+        levelFail()
+    }
+
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y)
 }
 
@@ -120,4 +160,27 @@ function moveDown() {
     playerPosition.y +=elementsSize
     startGame()
     }
+}
+
+function levelUp() {
+    console.log('Subiste de nivel');
+    level++
+    startGame()
+}
+
+function gameWin() {
+    console.log('Terminaste el juego');
+}
+
+function levelFail() {
+    console.log('BOOM! estas muerto!');
+    lives--
+    if (lives <= 0) {
+        level = 0
+        lives = 3
+    }
+    console.log(lives);  
+    playerPosition.x = undefined
+    playerPosition.y = undefined
+    startGame()
 }
