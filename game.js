@@ -4,6 +4,7 @@ const btnUp = document.querySelector('#up')
 const btnDown = document.querySelector('#down')
 const btnLeft = document.querySelector('#left')
 const btnRight = document.querySelector('#right')
+const spanLives = document.querySelector('#lives')
 
 const playerPosition = {
     x: undefined,
@@ -65,6 +66,8 @@ function startGame() {
 
     enemyPositions = [] 
     game.clearRect(0,0, canvasSize, canvasSize)
+
+    showLives()
 
     mapRowCols.forEach((row, rowIndex) => {
         row.forEach((col, colIndex) => {
@@ -175,6 +178,7 @@ function gameWin() {
 function levelFail() {
     console.log('BOOM! estas muerto!');
     lives--
+
     if (lives <= 0) {
         level = 0
         lives = 3
@@ -183,4 +187,11 @@ function levelFail() {
     playerPosition.x = undefined
     playerPosition.y = undefined
     startGame()
+}
+
+function showLives() {
+/*     const heartsArray = Array(lives).fill(emojis['HEART'])
+    spanLives.innerHTML = ==
+    heartsArray.forEach(heart => spanLives.append(heart)) */
+    spanLives.innerHTML = emojis["HEART"].repeat(lives)
 }
