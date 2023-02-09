@@ -5,6 +5,7 @@ const btnDown = document.querySelector('#down')
 const btnLeft = document.querySelector('#left')
 const btnRight = document.querySelector('#right')
 const spanLives = document.querySelector('#lives')
+const spanTime = document.querySelector('#time')
 
 const playerPosition = {
     x: undefined,
@@ -13,8 +14,13 @@ const playerPosition = {
 
 let canvasSize
 let elementsSize
+
 let level = 0
 let lives = 3
+
+let timeStart
+let timePlayer
+let timeInterval
 
 const giftPosition = {
     x: undefined,
@@ -37,7 +43,6 @@ function fixNumber(n) {
 }
 
 function setCanvasSize() {
-/*     canvasSize = Math.min(window.innerHeight, window.innerWidth) * 0.8; */
     if (window.innerHeight > window.innerWidth) {
         canvasSize = window.innerWidth * 0.7;
       } else {
@@ -60,6 +65,11 @@ function startGame() {
     if (!map) {
         gameWin()
         return
+    }
+    
+    if (!timeStart) {
+        timeStart = Date.now()
+        timeInterval = setInterval(showTime, 100)
     }
     const mapRows = map.trim().split('\n')
     const mapRowCols = mapRows.map(row => row.trim().split(''))
@@ -173,6 +183,7 @@ function levelUp() {
 
 function gameWin() {
     console.log('Terminaste el juego');
+    clearInterval(timeInterval)
 }
 
 function levelFail() {
@@ -182,6 +193,7 @@ function levelFail() {
     if (lives <= 0) {
         level = 0
         lives = 3
+        timeStart = undefined
     }
     console.log(lives);  
     playerPosition.x = undefined
@@ -190,8 +202,9 @@ function levelFail() {
 }
 
 function showLives() {
-/*     const heartsArray = Array(lives).fill(emojis['HEART'])
-    spanLives.innerHTML = ==
-    heartsArray.forEach(heart => spanLives.append(heart)) */
     spanLives.innerHTML = emojis["HEART"].repeat(lives)
+}
+
+function showTime() {
+    spanTime.innerHTML = Date.now() - timeStart
 }
