@@ -5,7 +5,9 @@ const btnDown = document.querySelector('#down')
 const btnLeft = document.querySelector('#left')
 const btnRight = document.querySelector('#right')
 const spanLives = document.querySelector('#lives')
-const spanTime = document.querySelector('#time')
+const spanTime = document.querySelector('#time') 
+const spanRecord = document.querySelector('#record')
+const results = document.querySelector('#result')
 
 const playerPosition = {
     x: undefined,
@@ -19,7 +21,6 @@ let level = 0
 let lives = 3
 
 let timeStart
-let timePlayer
 let timeInterval
 
 const giftPosition = {
@@ -70,6 +71,7 @@ function startGame() {
     if (!timeStart) {
         timeStart = Date.now()
         timeInterval = setInterval(showTime, 100)
+        showRecord()
     }
     const mapRows = map.trim().split('\n')
     const mapRowCols = mapRows.map(row => row.trim().split(''))
@@ -184,6 +186,20 @@ function levelUp() {
 function gameWin() {
     console.log('Terminaste el juego');
     clearInterval(timeInterval)
+
+    const recordTime = localStorage.getItem('record_time')
+    const playerTime = Date.now() - timeStart
+    if (recordTime) {
+        if (recordTime >= playerTime) {
+            localStorage.setItem('record_time', playerTime)
+            results.innerHTML = 'Haz establecido un nuevo record'
+        } else {
+            results.innerHTML = 'No superaste el record'
+        }
+    } else {
+        localStorage.setItem('record_time', playerTime)
+        results.innerHTML = 'Haz establecido un nuevo record'
+    }
 }
 
 function levelFail() {
@@ -207,4 +223,8 @@ function showLives() {
 
 function showTime() {
     spanTime.innerHTML = Date.now() - timeStart
+}
+
+function showRecord() {
+    spanRecord.innerHTML = localStorage.getItem('record_time')
 }
