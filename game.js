@@ -55,6 +55,8 @@ function setCanvasSize() {
 
     elementsSize = fixNumber(canvasSize / 10)
     
+    playerPosition.x = undefined
+    playerPosition.y = undefined
     startGame()
 }
 
