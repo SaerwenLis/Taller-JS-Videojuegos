@@ -8,6 +8,7 @@ const spanLives = document.querySelector('#lives')
 const spanTime = document.querySelector('#time') 
 const spanRecord = document.querySelector('#record')
 const results = document.querySelector('#result')
+const btnRestart = document.querySelector('#restart')
 
 const playerPosition = {
     x: undefined,
@@ -38,6 +39,7 @@ btnUp.addEventListener('click', moveUp)
 btnDown.addEventListener('click', moveDown)
 btnLeft.addEventListener('click', moveLeft)
 btnRight.addEventListener('click', moveRight)
+btnRestart.addEventListener('click', reiniciarJuego)
 
 function fixNumber(n) {
     return Number(n.toFixed(0));
@@ -195,12 +197,15 @@ function gameWin() {
         if (recordTime >= playerTime) {
             localStorage.setItem('record_time', playerTime)
             results.innerHTML = 'Haz establecido un nuevo record'
+            btnRestart.style.display = ''
         } else {
             results.innerHTML = 'No superaste el record'
+            btnRestart.style.display = ''
         }
     } else {
         localStorage.setItem('record_time', playerTime)
         results.innerHTML = 'Haz establecido un nuevo record'
+        btnRestart.style.display = ''
     }
 }
 
@@ -229,4 +234,8 @@ function showTime() {
 
 function showRecord() {
     spanRecord.innerHTML = localStorage.getItem('record_time')
+}
+
+function reiniciarJuego() {
+    location.reload()
 }

@@ -46,6 +46,10 @@
   button:not(:last-child) {
     margin-right: 10px;
   }
+
+  button:hover {
+    cursor: pointer;
+  }
   
   .messages {
     display: flex;
@@ -61,6 +65,12 @@
     width: 100%;
   }
 
+  #restart {
+    margin-top: 30px;
+    font-weight: bold;
+    color: rgb(50, 18, 73);
+    padding: 10px 0;
+  }
   
   @media (max-width: 440px) {
     button { margin-top: 5px; }
