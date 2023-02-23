@@ -38,10 +38,11 @@
     border-radius: 8px;
     border-color: #ffffff;
     font-family: inherit;
-    font-size: 16px;
+    font-size: 25px;
     margin: 0;
-    padding: 5px 20px;
-    width: 100px;
+    padding: 0 0;
+    width: 40px;
+    text-align: center;
   }
   button:not(:last-child) {
     margin-right: 10px;
@@ -68,8 +69,10 @@
   #restart {
     margin-top: 30px;
     font-weight: bold;
+    font-size: 16px;
     color: rgb(50, 18, 73);
     padding: 10px 0;
+    width: 100px;
   }
   
   @media (max-width: 440px) {

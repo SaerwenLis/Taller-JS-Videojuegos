@@ -15,6 +15,11 @@ const playerPosition = {
     y: undefined,
 }
 
+const firePosition = {
+    x: undefined,
+    y: undefined,
+}
+
 let canvasSize
 let elementsSize
 
@@ -39,7 +44,7 @@ btnUp.addEventListener('click', moveUp)
 btnDown.addEventListener('click', moveDown)
 btnLeft.addEventListener('click', moveLeft)
 btnRight.addEventListener('click', moveRight)
-btnRestart.addEventListener('click', reiniciarJuego)
+btnRestart.addEventListener('click', restartGame)
 
 function fixNumber(n) {
     return Number(n.toFixed(0));
@@ -63,7 +68,7 @@ function setCanvasSize() {
 }
 
 function startGame() {
-    game.font = `${elementsSize}px Arial`
+    game.font = `${elementsSize * 0.95}px Arial`
     game.textAlign = 'end'
 
     const map = maps[level]
@@ -115,6 +120,7 @@ function movePlayer() {
     const giftCollisionX = playerPosition.x == giftPosition.x
     const giftCollisionY = playerPosition.y == giftPosition.y
     const giftCollision = giftCollisionX && giftCollisionY
+    game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y)
 
     if (giftCollision) {
         levelUp()
@@ -125,11 +131,13 @@ function movePlayer() {
         const enemyCollisionY = enemy.y == playerPosition.y
         return enemyCollisionX && enemyCollisionY
     })
-    if (enemyCollision) {
-        levelFail()
-    }
 
-    game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y)
+    if (enemyCollision && (lives > 0)) {
+        firePosition.x = playerPosition.x;
+        firePosition.y = playerPosition.y;
+        game.fillText(emojis['E'], firePosition.x, firePosition.y)
+        setTimeout(levelFail, 1000);
+    } 
 }
 
 function moveByKeys(event) {
@@ -207,21 +215,44 @@ function gameWin() {
         results.innerHTML = 'Haz establecido un nuevo record'
         btnRestart.style.display = ''
     }
+    canvasMsg('Ganaste!')
 }
 
 function levelFail() {
     console.log('BOOM! estas muerto!');
     lives--
-
-    if (lives <= 0) {
-        level = 0
-        lives = 3
-        timeStart = undefined
-    }
-    console.log(lives);  
     playerPosition.x = undefined
     playerPosition.y = undefined
+
+    if (lives <= 0) {
+        game.clearRect(0,0, canvasSize, canvasSize)
+        setTimeout(fireExplosion, 1)
+        btnRestart.style.display = ''
+    }
+    console.log(lives);  
     startGame()
+}
+
+function fireExplosion() {
+    console.log('explosion')
+    game.clearRect(0,0, canvasSize, canvasSize)
+    game.font = `${elementsSize * 0.95}px Arial`
+    game.textAlign = 'end'
+    const explosions = explosion[0]
+    const expRows = explosions.trim().split('\n')
+    const expRowCols = expRows.map(row => row.trim().split(''))
+
+    expRowCols.forEach((row, rowIndex) => {
+        row.forEach((col, colIndex) => {
+            const emoji = emojis[col]
+            const posX = fixNumber(elementsSize * (colIndex + 1));
+            const posY = fixNumber(elementsSize * (rowIndex + 1));      
+
+            game.fillText(emoji, posX, posY)
+        })
+    });  
+    canvasMsg('Perdiste :(')
+    clearInterval(timeInterval)
 }
 
 function showLives() {
@@ -236,6 +267,14 @@ function showRecord() {
     spanRecord.innerHTML = localStorage.getItem('record_time')
 }
 
-function reiniciarJuego() {
+function restartGame() {
     location.reload()
+}
+
+function canvasMsg(msj) {
+    game.fillStyle = 'rgb(50, 18, 73)';
+    game.fillRect(0, (canvasSize/2.5), canvasSize, 80);
+    game.fillStyle = '#b1e7e2';
+    game.textAlign = 'center';
+    game.fillText(msj,(canvasSize/2),(canvasSize/2));
 }

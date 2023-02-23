@@ -9,7 +9,7 @@ const emojis = {
     'X': '💣',
     'I': '🎁',
     'PLAYER': '💀',
-    'BOMB_COLLISION': '🔥',
+    'E': '🔥',
     'GAME_OVER': '👎',
     'WIN': '🏆',
     'HEART': '💜',
@@ -76,3 +76,17 @@ const emojis = {
     XXX----OXX
     XXXXXXXXXX
     `);
+
+    const explosion = []
+    explosion.push(`
+    EEEEEEEEEE
+    EEEEEEEEEE
+    EEEEEEEEEE
+    EEEEEEEEEE
+    EEEEEEEEEE
+    EEEEEEEEEE
+    EEEEEEEEEE
+    EEEEEEEEEE
+    EEEEEEEEEE
+    EEEEEEEEEE
+    `)
