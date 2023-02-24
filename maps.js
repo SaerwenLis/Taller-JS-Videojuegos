@@ -7,11 +7,9 @@ const emojis = {
     '-': ' ',
     'O': '🚪',
     'X': '💣',
-    'I': '🎁',
-    'PLAYER': '💀',
+    'I': '🧶',
+    'PLAYER': '😺',
     'E': '🔥',
-    'GAME_OVER': '👎',
-    'WIN': '🏆',
     'HEART': '💜',
   };
   
