@@ -46,10 +46,12 @@ btnLeft.addEventListener('click', moveLeft)
 btnRight.addEventListener('click', moveRight)
 btnRestart.addEventListener('click', restartGame)
 
+//Para sacar los decimales
 function fixNumber(n) {
     return Number(n.toFixed(0));
 }
 
+//Tamaño dinamico del canvas segun la resolucion de la pantalla
 function setCanvasSize() {
     if (window.innerHeight > window.innerWidth) {
         canvasSize = window.innerWidth * 0.7;
@@ -67,6 +69,7 @@ function setCanvasSize() {
     startGame()
 }
 
+//Para renderizar el mapa dentro del canvas
 function startGame() {
     game.font = `${elementsSize * 0.95}px Arial`
     game.textAlign = 'end'
@@ -90,6 +93,7 @@ function startGame() {
 
     showLives()
 
+    //Ubicacion de elementos
     mapRowCols.forEach((row, rowIndex) => {
         row.forEach((col, colIndex) => {
             const emoji = emojis[col]
@@ -116,23 +120,26 @@ function startGame() {
     movePlayer() 
 }
 
+//Movimientos del jugador
 function movePlayer() {
     const giftCollisionX = playerPosition.x == giftPosition.x
     const giftCollisionY = playerPosition.y == giftPosition.y
     const giftCollision = giftCollisionX && giftCollisionY
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y)
 
+    //Si se encuentra con el paquete sube de nivel
     if (giftCollision) {
         levelUp()
     }
 
+    //Si se encuentra con una bomba pierde una vida 
     const enemyCollision = enemyPositions.find(enemy => {
         const enemyCollisionX = enemy.x == playerPosition.x
         const enemyCollisionY = enemy.y == playerPosition.y
         return enemyCollisionX && enemyCollisionY
     })
 
-    if (enemyCollision && (lives > 0)) {
+    if (enemyCollision) {
         firePosition.x = playerPosition.x;
         firePosition.y = playerPosition.y;
         game.fillText(emojis['E'], firePosition.x, firePosition.y)
@@ -140,6 +147,7 @@ function movePlayer() {
     } 
 }
 
+//Movimiento con teclas y mouse
 function moveByKeys(event) {
     if (event.key == 'ArrowUp') {
         moveUp()
@@ -189,12 +197,14 @@ function moveDown() {
     }
 }
 
+//Subir de nivel
 function levelUp() {
     console.log('Subiste de nivel');
     level++
     startGame()
 }
 
+//Guardando los records al ganar el juego y cartel de ganaste
 function gameWin() {
     console.log('Terminaste el juego');
     clearInterval(timeInterval)
@@ -215,9 +225,20 @@ function gameWin() {
         results.innerHTML = 'Haz establecido un nuevo record'
         btnRestart.style.display = ''
     }
-    canvasMsg('Ganaste!')
+    canvasMsg('Ganaste!🥳')
 }
 
+//Muestra el tiempo corriendo
+function showTime() {
+    spanTime.innerHTML = Date.now() - timeStart
+}
+
+//Muestra el record guardado
+function showRecord() {
+    spanRecord.innerHTML = localStorage.getItem('record_time')
+}
+
+//Quitar vidas y boton de reinicio
 function levelFail() {
     console.log('BOOM! estas muerto!');
     lives--
@@ -233,6 +254,17 @@ function levelFail() {
     startGame()
 }
 
+//Reiniciar el juego
+function restartGame() {
+    location.reload()
+}
+
+//Mostrar corazones en funcion de cuantas vidas tiene
+function showLives() {
+    spanLives.innerHTML = emojis["HEART"].repeat(lives)
+}
+
+//Renderizar fuego en todo el canvas al perder las 3 vidas, y cartel de perdiste
 function fireExplosion() {
     console.log('explosion')
     game.clearRect(0,0, canvasSize, canvasSize)
@@ -251,26 +283,11 @@ function fireExplosion() {
             game.fillText(emoji, posX, posY)
         })
     });  
-    canvasMsg('Perdiste :(')
+    canvasMsg('Perdiste 😔')
     clearInterval(timeInterval)
 }
 
-function showLives() {
-    spanLives.innerHTML = emojis["HEART"].repeat(lives)
-}
-
-function showTime() {
-    spanTime.innerHTML = Date.now() - timeStart
-}
-
-function showRecord() {
-    spanRecord.innerHTML = localStorage.getItem('record_time')
-}
-
-function restartGame() {
-    location.reload()
-}
-
+//Creacion de los carteles 
 function canvasMsg(msj) {
     game.fillStyle = 'rgb(50, 18, 73)';
     game.fillRect(0, (canvasSize/2.5), canvasSize, 80);
