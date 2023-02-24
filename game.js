@@ -225,7 +225,7 @@ function gameWin() {
         results.innerHTML = 'Haz establecido un nuevo record'
         btnRestart.style.display = ''
     }
-    canvasMsg('Ganaste!🥳')
+    canvasMsg('Ganaste!😻')
 }
 
 //Muestra el tiempo corriendo
@@ -283,7 +283,7 @@ function fireExplosion() {
             game.fillText(emoji, posX, posY)
         })
     });  
-    canvasMsg('Perdiste 😔')
+    canvasMsg('Perdiste 🙀')
     clearInterval(timeInterval)
 }
 
